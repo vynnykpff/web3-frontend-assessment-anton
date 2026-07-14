@@ -100,7 +100,7 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
 
     const loadingTimer = window.setTimeout(() => {
       setIsLoading(false);
-    }, 4450);
+    }, 450);
 
     return () => {
       window.clearTimeout(loadingTimer);
