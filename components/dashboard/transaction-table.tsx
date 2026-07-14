@@ -14,12 +14,14 @@ import {
   FileCode,
   Filter,
   Inbox,
+  RotateCcw,
   Send,
   Vote,
   XCircle,
   type LucideIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
 import styles from "./transaction-table.module.css";
 
 interface TransactionTableProps {
@@ -50,6 +52,7 @@ const typeIcons: Record<Transaction["type"], LucideIcon> = {
 };
 
 const statusFilterId = "transaction-status-filter";
+const SKELETON_ROWS = [0, 1, 2, 3];
 
 function statusVariant(
   status: TransactionStatus,
@@ -68,6 +71,7 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
   const [statusFilter, setStatusFilter] = useState<"all" | TransactionStatus>(
     "all",
   );
+  const [isLoading, setIsLoading] = useState(true);
 
   const visibleTransactions = useMemo(() => {
     if (statusFilter === "all") {
@@ -81,13 +85,40 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
 
   const transactionCountLabel =
     visibleTransactions.length === 1 ? "transaction" : "transactions";
+  const selectedStatusLabel =
+    STATUS_FILTER_OPTIONS.find((option) => option.value === statusFilter)
+      ?.label ?? "All statuses";
+  const emptyTitle =
+    statusFilter === "all" ? "No transactions yet" : "No matching transactions";
+  const emptyDescription =
+    statusFilter === "all"
+      ? "Recent on-chain activity will appear here as soon as transactions are available."
+      : `There are no ${selectedStatusLabel.toLowerCase()} transactions in the current dataset.`;
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    const loadingTimer = window.setTimeout(() => {
+      setIsLoading(false);
+    }, 450);
+
+    return () => {
+      window.clearTimeout(loadingTimer);
+    };
+  }, [statusFilter, transactions]);
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} aria-busy={isLoading}>
       <div className={styles.toolbar}>
         <p className={styles.count}>
           <ArrowLeftRight className={styles.countIcon} aria-hidden="true" />
-          Showing {visibleTransactions.length} {transactionCountLabel}
+          {isLoading ? (
+            "Loading transactions"
+          ) : (
+            <>
+              Showing {visibleTransactions.length} {transactionCountLabel}
+            </>
+          )}
         </p>
         <div className={styles.filterWrap}>
           <label className={styles.filterLabel} htmlFor={statusFilterId}>
@@ -113,11 +144,34 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
         </div>
       </div>
 
-      {visibleTransactions.length === 0 ? (
-        <p className={cn(styles.empty, motionEnter("animatecss-fadeIn"))}>
-          <Inbox className={styles.emptyIcon} aria-hidden="true" />
-          No transactions to display.
-        </p>
+      {!isLoading && visibleTransactions.length === 0 ? (
+        <div
+          className={cn(styles.empty, motionEnter("animatecss-fadeIn"))}
+          role="status"
+        >
+          <span className={styles.emptyIconWrap} aria-hidden="true">
+            <Inbox className={styles.emptyIcon} />
+          </span>
+          <div className={styles.emptyContent}>
+            <p className={styles.emptyTitle}>{emptyTitle}</p>
+            <p className={styles.emptyDescription}>{emptyDescription}</p>
+            {statusFilter !== "all" ? (
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                className={styles.emptyAction}
+                onClick={() => setStatusFilter("all")}
+              >
+                <RotateCcw
+                  className={styles.emptyActionIcon}
+                  aria-hidden="true"
+                />
+                Show all statuses
+              </Button>
+            ) : null}
+          </div>
+        </div>
       ) : (
         <table className={styles.table}>
           <thead className={styles.thead}>
@@ -130,53 +184,91 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
               <th className={styles.th}>Time</th>
             </tr>
           </thead>
-          <tbody key={statusFilter}>
-            {visibleTransactions.map((transaction, index) => {
-              const StatusIcon = statusIcons[transaction.status];
-              const TypeIcon = typeIcons[transaction.type];
-              const { relative, absolute } = formatTransactionTime(
-                transaction.timestamp,
-              );
+          <tbody key={isLoading ? "loading" : statusFilter}>
+            {isLoading
+              ? SKELETON_ROWS.map((row) => (
+                  <tr key={row} className={styles.row}>
+                    <td className={styles.hashCell}>
+                      <span
+                        className={cn(styles.skeleton, styles.skeletonHash)}
+                      />
+                    </td>
+                    <td className={styles.typeCell}>
+                      <span
+                        className={cn(styles.skeleton, styles.skeletonType)}
+                      />
+                    </td>
+                    <td className={styles.cell}>
+                      <span
+                        className={cn(styles.skeleton, styles.skeletonAmount)}
+                      />
+                    </td>
+                    <td className={styles.cell}>
+                      <span
+                        className={cn(styles.skeleton, styles.skeletonBadge)}
+                      />
+                    </td>
+                    <td className={styles.cell}>
+                      <span
+                        className={cn(
+                          styles.skeleton,
+                          styles.skeletonConfirmation,
+                        )}
+                      />
+                    </td>
+                    <td className={styles.timeCell}>
+                      <span
+                        className={cn(styles.skeleton, styles.skeletonTime)}
+                      />
+                    </td>
+                  </tr>
+                ))
+              : visibleTransactions.map((transaction, index) => {
+                  const StatusIcon = statusIcons[transaction.status];
+                  const TypeIcon = typeIcons[transaction.type];
+                  const { relative, absolute } = formatTransactionTime(
+                    transaction.timestamp,
+                  );
 
-              return (
-                <tr
-                  key={transaction.id}
-                  className={cn(
-                    styles.row,
-                    motionEnter("animatecss-fadeIn", index),
-                  )}
-                >
-                  <td className={styles.hashCell}>{transaction.hash}</td>
-                  <td className={styles.typeCell}>
-                    <span className={styles.typeLabel}>
-                      <TypeIcon
-                        className={styles.typeIcon}
-                        aria-hidden="true"
-                      />
-                      {transaction.type}
-                    </span>
-                  </td>
-                  <td className={styles.cell}>{transaction.amount}</td>
-                  <td className={styles.cell}>
-                    <Badge variant={statusVariant(transaction.status)}>
-                      <StatusIcon
-                        className={styles.badgeIcon}
-                        aria-hidden="true"
-                      />
-                      {transaction.status}
-                    </Badge>
-                  </td>
-                  <td className={styles.cell}>
-                    {getConfirmationLabel(transaction)}
-                  </td>
-                  <td className={styles.timeCell}>
-                    <time dateTime={transaction.timestamp} title={absolute}>
-                      {relative}
-                    </time>
-                  </td>
-                </tr>
-              );
-            })}
+                  return (
+                    <tr
+                      key={transaction.id}
+                      className={cn(
+                        styles.row,
+                        motionEnter("animatecss-fadeIn", index),
+                      )}
+                    >
+                      <td className={styles.hashCell}>{transaction.hash}</td>
+                      <td className={styles.typeCell}>
+                        <span className={styles.typeLabel}>
+                          <TypeIcon
+                            className={styles.typeIcon}
+                            aria-hidden="true"
+                          />
+                          {transaction.type}
+                        </span>
+                      </td>
+                      <td className={styles.cell}>{transaction.amount}</td>
+                      <td className={styles.cell}>
+                        <Badge variant={statusVariant(transaction.status)}>
+                          <StatusIcon
+                            className={styles.badgeIcon}
+                            aria-hidden="true"
+                          />
+                          {transaction.status}
+                        </Badge>
+                      </td>
+                      <td className={styles.cell}>
+                        {getConfirmationLabel(transaction)}
+                      </td>
+                      <td className={styles.timeCell}>
+                        <time dateTime={transaction.timestamp} title={absolute}>
+                          {relative}
+                        </time>
+                      </td>
+                    </tr>
+                  );
+                })}
           </tbody>
         </table>
       )}
