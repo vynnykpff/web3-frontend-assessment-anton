@@ -1,5 +1,11 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/cn";
+import { formatTransactionTime } from "@/lib/format-time";
+import { getConfirmationLabel } from "@/lib/get-confirmation-label";
+import { motionEnter } from "@/lib/motion";
+import type { Transaction, TransactionStatus } from "@/types/dashboard";
 import {
   ArrowLeftRight,
   CheckCircle2,
@@ -14,12 +20,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/cn";
-import { formatTransactionTime } from "@/lib/format-time";
-import { getConfirmationLabel } from "@/lib/get-confirmation-label";
-import { motionEnter } from "@/lib/motion";
-import type { Transaction, TransactionStatus } from "@/types/dashboard";
 import styles from "./transaction-table.module.css";
 
 interface TransactionTableProps {
@@ -139,14 +139,20 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
                   <td className={styles.hashCell}>{transaction.hash}</td>
                   <td className={styles.typeCell}>
                     <span className={styles.typeLabel}>
-                      <TypeIcon className={styles.typeIcon} aria-hidden="true" />
+                      <TypeIcon
+                        className={styles.typeIcon}
+                        aria-hidden="true"
+                      />
                       {transaction.type}
                     </span>
                   </td>
                   <td className={styles.cell}>{transaction.amount}</td>
                   <td className={styles.cell}>
                     <Badge variant={statusVariant(transaction.status)}>
-                      <StatusIcon className={styles.badgeIcon} aria-hidden="true" />
+                      <StatusIcon
+                        className={styles.badgeIcon}
+                        aria-hidden="true"
+                      />
                       {transaction.status}
                     </Badge>
                   </td>
