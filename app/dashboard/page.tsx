@@ -22,13 +22,20 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <section className={styles.metricsGrid}>
+        <section
+          className={styles.metricsGrid}
+          aria-label="Infrastructure metrics"
+        >
           {metrics.map((metric, index) => (
             <MetricCard key={metric.id} metric={metric} index={index} />
           ))}
         </section>
 
-        <section id="analytics" className={styles.analyticsGrid}>
+        <section
+          id="analytics"
+          className={styles.analyticsGrid}
+          aria-label="Analytics and node status"
+        >
           <Card
             className={cn(
               styles.cardAnimated,
@@ -66,7 +73,7 @@ export default function DashboardPage() {
           <Card
             className={cn(
               styles.cardAnimated,
-              motionEnter("animatecss-fadeInUp", 3),
+              motionEnter("animatecss-fadeIn", 3),
             )}
           >
             <CardHeader

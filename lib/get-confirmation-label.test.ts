@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { mockDashboardData } from "@/data/mock-dashboard";
 import { getConfirmationLabel } from "@/lib/get-confirmation-label";
 import type { Transaction } from "@/types/dashboard";
 
@@ -20,13 +21,33 @@ describe("getConfirmationLabel", () => {
 
   it("returns a pending label when there are no confirmations", () => {
     expect(
-      getConfirmationLabel({ ...baseTransaction, confirmations: 0, status: "pending" }),
+      getConfirmationLabel({
+        ...baseTransaction,
+        confirmations: 0,
+        status: "pending",
+      }),
     ).toBe("Pending");
   });
 
   it("returns Failed for failed transactions regardless of confirmation count", () => {
     expect(
-      getConfirmationLabel({ ...baseTransaction, status: "failed", confirmations: 24 }),
+      getConfirmationLabel({
+        ...baseTransaction,
+        status: "failed",
+        confirmations: 24,
+      }),
     ).toBe("Failed");
+  });
+
+  it("returns Failed for dashboard tx-005", () => {
+    const transaction = mockDashboardData.transactions.find(
+      (transaction) => transaction.id === "tx-005",
+    );
+
+    if (!transaction) {
+      throw new Error("Dashboard transaction tx-005 was not found.");
+    }
+
+    expect(getConfirmationLabel(transaction)).toBe("Failed");
   });
 });

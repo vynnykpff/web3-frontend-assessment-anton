@@ -1,4 +1,4 @@
-import { Blocks } from "lucide-react";
+import { Blocks, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,12 @@ import { cn } from "@/lib/cn";
 import { motionEnter } from "@/lib/motion";
 import styles from "./header.module.css";
 
-export function Header() {
+interface HeaderProps {
+  isMobileMenuOpen: boolean;
+  onMobileMenuOpen: () => void;
+}
+
+export function Header({ isMobileMenuOpen, onMobileMenuOpen }: HeaderProps) {
   return (
     <header
       className={cn(
@@ -15,13 +20,19 @@ export function Header() {
       )}
     >
       <div className={styles.brand}>
-        <Image
-          src="/logo.png"
-          alt="Nodveta"
-          width={32}
-          height={32}
-          priority
-        />
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
+          className={styles.menuButton}
+          aria-label="Open navigation menu"
+          aria-controls="mobile-navigation"
+          aria-expanded={isMobileMenuOpen}
+          onClick={onMobileMenuOpen}
+        >
+          <Menu className={styles.menuIcon} aria-hidden="true" />
+        </Button>
+        <Image src="/logo.png" alt="Nodveta" width={32} height={32} priority />
         <div>
           <p className={styles.brandName}>Nodveta</p>
           <p className={styles.brandTagline}>Infrastructure Dashboard</p>
