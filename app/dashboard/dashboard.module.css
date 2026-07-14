@@ -15,11 +15,13 @@
 }
 
 .metricsGrid {
-  @apply grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4;
+  @apply grid gap-4;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr));
 }
 
 .analyticsGrid {
-  @apply grid grid-cols-1 gap-6 lg:grid-cols-2;
+  @apply grid gap-6;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
 }
 
 .cardAnimated {
