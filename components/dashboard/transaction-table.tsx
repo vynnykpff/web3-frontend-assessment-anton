@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { formatTransactionTime } from "@/lib/format-time";
 import { getConfirmationLabel } from "@/lib/get-confirmation-label";
@@ -21,7 +22,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
 import styles from "./transaction-table.module.css";
 
 interface TransactionTableProps {
@@ -100,7 +100,7 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
 
     const loadingTimer = window.setTimeout(() => {
       setIsLoading(false);
-    }, 450);
+    }, 4450);
 
     return () => {
       window.clearTimeout(loadingTimer);
