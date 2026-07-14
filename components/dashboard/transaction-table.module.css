@@ -15,6 +15,14 @@
 }
 
 .filterWrap {
+  @apply flex items-center gap-2;
+}
+
+.filterLabel {
+  @apply text-sm font-medium text-slate-600;
+}
+
+.selectWrap {
   @apply relative flex items-center;
 }
 

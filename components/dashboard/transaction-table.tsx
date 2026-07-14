@@ -49,6 +49,8 @@ const typeIcons: Record<Transaction["type"], LucideIcon> = {
   governance: Vote,
 };
 
+const statusFilterId = "transaction-status-filter";
+
 function statusVariant(
   status: TransactionStatus,
 ): "success" | "warning" | "danger" {
@@ -77,29 +79,37 @@ export function TransactionTable({ transactions }: TransactionTableProps) {
     );
   }, [statusFilter, transactions]);
 
+  const transactionCountLabel =
+    visibleTransactions.length === 1 ? "transaction" : "transactions";
+
   return (
     <div className={styles.root}>
       <div className={styles.toolbar}>
         <p className={styles.count}>
           <ArrowLeftRight className={styles.countIcon} aria-hidden="true" />
-          Showing {visibleTransactions.length} transactions
+          Showing {visibleTransactions.length} {transactionCountLabel}
         </p>
         <div className={styles.filterWrap}>
-          <Filter className={styles.filterIcon} aria-hidden="true" />
-          <select
-            aria-label="Filter transactions by status"
-            className={styles.filter}
-            value={statusFilter}
-            onChange={(event) =>
-              setStatusFilter(event.target.value as "all" | TransactionStatus)
-            }
-          >
-            {STATUS_FILTER_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <label className={styles.filterLabel} htmlFor={statusFilterId}>
+            Status
+          </label>
+          <div className={styles.selectWrap}>
+            <Filter className={styles.filterIcon} aria-hidden="true" />
+            <select
+              id={statusFilterId}
+              className={styles.filter}
+              value={statusFilter}
+              onChange={(event) =>
+                setStatusFilter(event.target.value as "all" | TransactionStatus)
+              }
+            >
+              {STATUS_FILTER_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
