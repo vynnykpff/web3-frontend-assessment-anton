@@ -1,0 +1,27 @@
+.header {
+  @apply flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-6;
+}
+
+.brand {
+  @apply flex items-center gap-3;
+}
+
+.brandName {
+  @apply text-sm font-semibold text-slate-900;
+}
+
+.brandTagline {
+  @apply text-xs text-slate-500;
+}
+
+.actions {
+  @apply flex items-center gap-4;
+}
+
+.networkStatus {
+  @apply hidden items-center gap-1.5 text-sm text-slate-500 sm:inline-flex;
+}
+
+.networkIcon {
+  @apply h-4 w-4 text-nodveta-500;
+}

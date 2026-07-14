@@ -1,0 +1,27 @@
+.page {
+  @apply space-y-6;
+}
+
+.header {
+  @apply space-y-1;
+}
+
+.title {
+  @apply text-2xl font-bold text-slate-900;
+}
+
+.subtitle {
+  @apply text-slate-500;
+}
+
+.metricsGrid {
+  @apply grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4;
+}
+
+.analyticsGrid {
+  @apply grid grid-cols-1 gap-6 lg:grid-cols-2;
+}
+
+.cardAnimated {
+  @apply transition-shadow duration-300 hover:shadow-md;
+}

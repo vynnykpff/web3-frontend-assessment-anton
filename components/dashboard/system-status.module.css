@@ -1,0 +1,27 @@
+.list {
+  @apply space-y-2;
+}
+
+.item {
+  @apply flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm transition-colors duration-200 hover:border-slate-300 hover:bg-slate-50;
+}
+
+.content {
+  @apply min-w-0 flex-1;
+}
+
+.name {
+  @apply flex items-center gap-1.5 font-medium text-slate-800;
+}
+
+.healthIcon {
+  @apply h-4 w-4 shrink-0 text-slate-500;
+}
+
+.meta {
+  @apply text-xs text-slate-500;
+}
+
+.outageBadge {
+  @apply animatecss animatecss-pulse animatecss-infinite;
+}

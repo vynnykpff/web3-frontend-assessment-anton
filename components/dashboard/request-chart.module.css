@@ -1,0 +1,23 @@
+.root {
+  @apply space-y-4;
+}
+
+.chart {
+  @apply flex h-48 items-end gap-3;
+}
+
+.barColumn {
+  @apply flex flex-1 flex-col items-center gap-2;
+}
+
+.bar {
+  @apply w-full rounded-t bg-nodveta-500 transition-all duration-300 hover:bg-nodveta-600;
+}
+
+.hourLabel {
+  @apply text-xs text-slate-500;
+}
+
+.caption {
+  @apply text-xs text-slate-400;
+}

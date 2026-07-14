@@ -1,0 +1,27 @@
+.aside {
+  @apply hidden w-64 shrink-0 border-r border-slate-200 bg-slate-50 md:flex md:flex-col;
+}
+
+.nav {
+  @apply flex flex-1 flex-col gap-1 p-4;
+}
+
+.heading {
+  @apply mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400;
+}
+
+.link {
+  @apply flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors;
+}
+
+.linkActive {
+  @apply bg-nodveta-600 text-white;
+}
+
+.linkInactive {
+  @apply text-slate-600 hover:bg-slate-200;
+}
+
+.linkIcon {
+  @apply h-4 w-4 shrink-0;
+}
